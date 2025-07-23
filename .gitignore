@@ -1,6 +1,6 @@
 config.js
 
-
+*.tif
 *.pmtiles
 *.geojson
 *.geojson.gz
@@ -8,6 +8,8 @@ config.js
 *.fgb
 *.json
 *.gpkg
+
+*.clr
 
 *.parquet 
 
@@ -24,5 +26,6 @@ config.js
 agrarchecker_env/
 
 
+preprocessing/raster/schrott
 
 

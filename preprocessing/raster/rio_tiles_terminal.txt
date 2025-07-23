@@ -1,0 +1,17 @@
+
+
+### tif zu webmerc
+gdalwarp -t_srs EPSG:3857 -r bilinear -co COMPRESS=LZW \
+  CTM_GER_2019_rst_v202_COG.tif CTM_GER_2019_webmerc.tif
+
+
+### tilen, um es nachher schneller rgba zu tranfomieren???
+gdal_translate -co TILED=YES -co COMPRESS=LZW CTM_GER_2019_webmerc.tif CTM_GER_2019_webmerc_tiled.tif
+
+
+###  rgba zu tranfomieren
+python to_rgba_raster_streaming_fast_tdqm.py --input CTM_GER_2019_webmerc_tiled.tif --output CTM_GER_2019_rgba.tif
+
+
+### pmtiles erstellen
+rio pmtiles   --format WEBP   --zoom-levels 5..10   --output CTM_GER_2019_rgba_til10.pmtiles   -j 4   CTM_GER_2019_rgba.tif
