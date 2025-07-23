@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Agrarchecker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <link rel="icon" href="data:,"> -->
+  <link rel="icon" href="tractor-svgrepo-com.svg" type="image/svg+xml">
+  <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css' />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div class="legend">
+
+
+    <!-- ====================
+MAIN HEADER
+======================= -->
+    <div class="legend-header legend-title" data-toggle="legend-root">
+      <div style="flex-grow: 1;">
+        <div class="legend-heading">Agrarchecker</div>
+        <div class="legend-subtext">
+          Agrar crop type data von Thuenen<br />von 2019–2022
+          <span class="info-icon" title="Quelle: Schwieder, M., Tetteh, G. O., Blickensdörfer, L., Gocht, A., & Erasmi, S. (2024). Agricultural land use: National-scale crop type maps for Germany from combined time series of Sentinel-1, Sentinel-2 and Landsat data (2017 to 2021) (Version v202) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.10640528 – Lizenz: Creative Commons Attribution 4.0 International">ⓘ</span>
+        </div>
+      </div>
+      <!-- <span class="toggle-arrow open" data-arrow="legend-root"></span> -->
+      <span class="toggle-arrow toggle-root open" data-arrow="legend-root"></span>
+    </div>
+
+    <div class="legend-section-divider"></div>
+
+
+
+
+
+
+
+    <!-- ====================
+     Sektion 3: Kontext
+======================= -->
+    <div class="legend-section" data-section="kontext">
+      <div class="legend-section-title section-toggle" data-section-id="kontext"
+        style="display: flex; align-items: center; justify-content: space-between;">
+        <span>Kontext</span>
+        <span class="toggle-arrow section-arrow open" data-arrow="kontext"></span>
+      </div>
+      <div class="legend-section-content">
+
+        <div class="legend-section-subtitle">Helper/Straßenfotos</div>
+
+        <div style="margin-top: 6px;">
+          <label style="margin-left: 10px;">
+            <input type="checkbox" id="toggle-mapillary" />
+            Mapillary-Bilder anzeigen
+            <span class="info-icon" title="Quelle: Mapillary Coverage – Lizenz: CC BY-SA 4.0">ⓘ</span>
+          </label>
+        </div>
+
+        <div id="mapillary-filter-options" style="display: none; margin-left: 32px; margin-top: 6px;">
+          <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            <input type="checkbox" id="mapillary-nonpano" />
+            <span style="width: 12px; height: 12px; background: #00b955; border-radius: 2px;"></span>
+            normale Bilder
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="mapillary-pano" />
+            <span style="width: 12px; height: 12px; background: #0077ff; border-radius: 2px;"></span>
+            Panorama-Bilder
+          </label>
+        </div>
+
+
+
+        <div class="legend-section-subtitle" style="margin-top: 12px;">Agar</div>
+
+        <!-- <div style="margin-top: 6px;">
+          <label style="margin-left: 10px;">
+            <input type="checkbox" id="toggle-agrar_2021" />
+            Agrar layer 2021 anzeigen
+            <span class="info-icon" title="Quelle: © OpenStreetMap (25-05-28) – Lizenz: ODbL">ⓘ</span>
+          </label>
+        </div>
+
+
+
+
+        <div style="margin-top: 6px;">
+          <label style="margin-left: 10px;">
+            <input type="checkbox" id="toggle-agrar_2022" />
+            Agrar layer 2022 anzeigen
+            <span class="info-icon" title="Quelle: © OpenStreetMap (25-05-28) – Lizenz: ODbL">ⓘ</span>
+          </label>
+        </div> -->
+
+        <!-- <div style="margin-top: 12px; padding-left: 10px;">
+          <label for="agrar-layer-slider" style="display: block; margin-bottom: 4px;">
+            Agrar Layer auswählen:
+            <span class="info-icon" title="Quelle: © OpenStreetMap (25-05-28) – Lizenz: ODbL">ⓘ</span>
+          </label>
+          <input type="range" id="agrar-layer-slider" min="2019" max="2022" step="1" value="2019" />
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 2px;">
+            <span>2019</span>
+            <span>2020</span>
+            <span>2021</span>
+            <span>2022</span>
+          </div>
+        </div> -->
+
+        <div style="margin-top: 12px; padding-left: 10px;">
+          <label for="agrar-layer-slider" style="display: block; margin-bottom: 4px;">
+            Agrar Layer auswählen:
+            <span class="info-icon" title="Quelle: © OpenStreetMap (25-05-28) – Lizenz: ODbL">ⓘ</span>
+          </label>
+          <input type="range" id="agrar-layer-slider" min="2019" max="2022" step="1" value="2019" />
+          <div style="font-size: 13px; margin-top: 6px;">
+            Jahr: <span id="agrar-layer-year">2019</span>
+          </div>
+        </div>
+
+
+
+        <div id="xy" style="margin-left: 20px; margin-top: 6px; font-size: 11px;">
+  <div><strong>Flächennutzung (Agrar Vektor)</strong></div>
+  <div style="margin-top: 4px;">
+    <label><input type="checkbox" class="agrar-filter" value="200" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(105,194,41);margin-right:6px;"></span>
+      Dauergrünland
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1101" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(251,251,22);margin-right:6px;"></span>
+      Winterweizen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1102" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(228,206,63);margin-right:6px;"></span>
+      Wintergerste
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1103" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(234,127,18);margin-right:6px;"></span>
+      Winterroggen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1201" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(194,75,45);margin-right:6px;"></span>
+      Sommergerste
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1202" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(180,23,23);margin-right:6px;"></span>
+      Sommerhafer
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1300" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(55,237,216);margin-right:6px;"></span>
+      Mais
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1401" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(195,125,238);margin-right:6px;"></span>
+      Kartoffeln
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1402" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(154,12,238);margin-right:6px;"></span>
+      Zuckerrübe
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1501" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(238,67,156);margin-right:6px;"></span>
+      Winterraps
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1502" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(227,0,247);margin-right:6px;"></span>
+      Sonnenblumen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1602" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(145,255,0);margin-right:6px;"></span>
+      Ackerfutter
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1603" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(251,33,17);margin-right:6px;"></span>
+      Gartenbauerzeugnisse
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1611" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(94,176,132);margin-right:6px;"></span>
+      Erbse
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1612" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(91,240,158);margin-right:6px;"></span>
+      Ackerbohne
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1613" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(157,245,163);margin-right:6px;"></span>
+      Lupine
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="1614" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(212,237,177);margin-right:6px;"></span>
+      Soja
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="3001" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(5,131,5);margin-right:6px;"></span>
+      Gehölz
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="3002" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(212,212,212);margin-right:6px;"></span>
+      Sonstige landw. Flächen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="3003" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(178,206,68);margin-right:6px;"></span>
+      Brachen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="3004" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(111,111,111);margin-right:6px;"></span>
+      Sonstige Flächen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="4001" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(130,128,186);margin-right:6px;"></span>
+      Rebflächen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="4002" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(74,20,134);margin-right:6px;"></span>
+      Hopfen
+    </label><br/>
+
+    <label><input type="checkbox" class="agrar-filter" value="4003" checked />
+      <span style="display:inline-block;width:24px;height:12px;background:rgb(106,81,163);margin-right:6px;"></span>
+      Plantagen
+    </label><br/>
+  </div>
+</div>
+
+
+
+        <!-- <div id="xy" style="margin-left: 20px; margin-top: 6px; font-size: 11px;">
+          <div><strong>Flächennutzung (Agrar Vektor)</strong></div>
+          <div style="margin-top: 4px;">
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(105,194,41);margin-right:6px;"></span>Dauergrünland
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(251,251,22);margin-right:6px;"></span>Winterweizen
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(228,206,63);margin-right:6px;"></span>Wintergerste
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(234,127,18);margin-right:6px;"></span>Winterroggen
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(194,75,45);margin-right:6px;"></span>Sommergerste
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(180,23,23);margin-right:6px;"></span>Sommerhafer
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(55,237,216);margin-right:6px;"></span>Mais
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(195,125,238);margin-right:6px;"></span>Kartoffeln
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(154,12,238);margin-right:6px;"></span>Zuckerrübe
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(238,67,156);margin-right:6px;"></span>Winterraps
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(227,0,247);margin-right:6px;"></span>Sonnenblumen
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(145,255,0);margin-right:6px;"></span>Ackerfutter
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(251,33,17);margin-right:6px;"></span>Gartenbauerzeugnisse
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(94,176,132);margin-right:6px;"></span>Erbse
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(91,240,158);margin-right:6px;"></span>Ackerbohne
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(157,245,163);margin-right:6px;"></span>Lupine
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(212,237,177);margin-right:6px;"></span>Soja
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(5,131,5);margin-right:6px;"></span>Gehölz
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(212,212,212);margin-right:6px;"></span>Sonstige
+              landw. Flächen</div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(178,206,68);margin-right:6px;"></span>Brachen
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(111,111,111);margin-right:6px;"></span>Sonstige
+              Flächen</div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(130,128,186);margin-right:6px;"></span>Rebflächen
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(74,20,134);margin-right:6px;"></span>Hopfen
+            </div>
+            <div><span
+                style="display:inline-block;width:24px;height:12px;background:rgb(106,81,163);margin-right:6px;"></span>Plantagen
+            </div>
+          </div>
+        </div> -->
+
+
+
+
+
+      </div>
+    </div>
+
+
+
+    <div class="legend-section-divider"></div>
+
+
+
+    <div id="feature-count-wrapper"
+      style="margin-top:10px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+      <div id="feature-count">
+        <!-- Sichtbare Punkte: ... -->
+        <div>Zoomlevel: ...</div>
+      </div>
+      <a href="https://blaaa" target="_blank" title="Fehler melden oder Feedback geben">
+        <img src="https://img.shields.io/badge/Status-Experimental-red" alt="Status: Experimental"
+          style="height: 20px;">
+      </a>
+    </div>
+
+
+  </div>
+
+
+
+
+  <!-- Gemeinsamer Container -->
+  <div id="bottom-left-ui-container">
+    <div id="custom-nav-control"></div>
+
+    <div id="basemap-thumbnails">
+      <div class="basemap-thumb selected" data-map="standard" title="Standard"></div>
+      <div class="basemap-thumb" data-map="satellite" title="Satellit"></div>
+    </div>
+
+    <div id="terrain-controls">
+      <label><input type="checkbox" id="toggleTerrain" /> Terrain</label>
+      <label><input type="checkbox" id="toggleHillshade" /> Hillshade</label>
+    </div>
+  </div>
+
+
+  <script src="https://unpkg.com/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+
+  <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/pmtiles@4.3.0/dist/pmtiles.js"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
