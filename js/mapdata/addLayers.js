@@ -257,32 +257,8 @@ function addAgrarVectorLayer(map, year) {
   }
 
 
-  function addRasterLayers(map) {
-    // Satellite layer (optional: insert below a specific layer)
-    map.addLayer({
-      id: "satellite-layer",
-      type: "raster",
-      source: "satellite",
-      layout: { visibility: "none" }
-    }, "agrar_vector_2019"); // insert below accident points layer
-
-    // Hillshade layer
-    map.addLayer({
-      id: "hillshade-layer",
-      type: "raster",
-      source: "hillshade",
-      layout: { visibility: "none" }, // initial hidden
-      paint: {
-        "raster-opacity": 0.3
-      }
-    });
-
-    // Disable terrain initially (can be enabled dynamically)
-    map.setTerrain(null);
-  }
-
-
-
+  // Basemap-Raster (OSM/Esri) und Hillshade werden keyless in
+  // js/map/basemapTerrain.js angelegt (addBasemaps / setHillshade).
 
 
 
@@ -332,7 +308,5 @@ function addAgrarVectorLayer(map, year) {
   // addAgarRaster2022Layer(map);
 
   addMapillaryLayer(map);
-
-  addRasterLayers(map);
 
 }

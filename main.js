@@ -8,6 +8,7 @@ import { paintStyles, getCircleColorPaint } from './js/styleConfig.js';
 import { addSources } from "./js/mapdata/addSources.js";
 // import { loadAllIcons } from "./loadAllIcons.js";
 import { addLayers } from "./js/mapdata/addLayers.js";
+import { addBasemapTerrain } from "./js/map/basemapTerrain.js";
 
 // // 📦 UI & Interaktion
 import { setupMapPanel } from './js/ui/setupMapPanel.js';
@@ -64,7 +65,6 @@ import { setupMapillary } from "./js/utils/useMapillary.js";
 
 
 
-let MAPTILER_API_KEY = '';
 let MAPILLARY_TOKEN = '';
 
 let originalMinZoom = 6;
@@ -89,7 +89,7 @@ export const LAYERS = {
   try {
     // handle the config import based on the environment  for the api keys
     const config = await import(isLocalhost ? './js/config/config.js' : './js/config/config.public.js');
-    ({ MAPTILER_API_KEY, MAPILLARY_TOKEN } = config);
+    ({ MAPILLARY_TOKEN } = config);
     console.log(`🔑 ${isLocalhost ? "Lokale config.js" : "config.public.js"} geladen`);
 
     // cleanupLegacyPermalink();
@@ -112,7 +112,8 @@ async function initMap() {
 
   window.map = new maplibregl.Map({
     container: "map",
-    style: "./style.json",
+    // Keyless Basemap: gehosteter OpenFreeMap-Positron-Style (Tiles+Sprite+Glyphs)
+    style: "https://tiles.openfreemap.org/styles/positron",
     center: [13.634, 52.315], // Default center
     zoom: 12,                 // Default zoom
     minZoom: 6,
@@ -375,8 +376,7 @@ function initializeMapModules(map) {
   setupPhotonGeocoder(map);
   // setupPieChartImageGeneration(map);
   addNavigationControl(map);
-  addSources(map, { MAPILLARY_TOKEN, MAPTILER_API_KEY });
-  // await loadAllIcons(map); // falls wieder benötigt
-
+  addSources(map, { MAPILLARY_TOKEN });
   addLayers(map);
+  addBasemapTerrain(map); // keyless OSM/Esri-Basemaps nach den Datenlayern einfügen
 }

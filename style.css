@@ -787,7 +787,7 @@ body {
 
 .basemap-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
@@ -821,18 +821,26 @@ body {
   background-color: #e5e7eb;
 }
 
-.basemap-preview-standard {
+.basemap-preview-positron {
+  background-color: #eef3f7;
   background-image: url('./thumbs/thumb-standard.png');
 }
 
+.basemap-preview-osm {
+  background-color: #f5f1df;
+  background-image: url('./thumbs/thumb-osm.png');
+}
+
 .basemap-preview-satellite {
+  background-color: #516146;
   background-image: url('./thumbs/thumb-satellite.png');
 }
 
 .basemap-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #4b5563;
+  white-space: nowrap;
 }
 
 .terrain-row {

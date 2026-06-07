@@ -150,28 +150,32 @@
   <section id="map-settings-panel" class="map-settings-panel is-collapsed" aria-label="Kartenauswahl">
     <div class="map-settings-panel-content">
       <div class="basemap-grid">
-        <button class="basemap-btn selected" type="button" data-basemap="standard">
-          <span class="basemap-preview basemap-preview-standard"></span>
-          <span class="basemap-label">Standard</span>
+        <button class="basemap-btn selected" type="button" data-basemap="positron">
+          <span class="basemap-preview basemap-preview-positron"></span>
+          <span class="basemap-label">Positron</span>
+        </button>
+        <button class="basemap-btn" type="button" data-basemap="osm">
+          <span class="basemap-preview basemap-preview-osm"></span>
+          <span class="basemap-label">OSM Carto</span>
         </button>
         <button class="basemap-btn" type="button" data-basemap="satellite">
           <span class="basemap-preview basemap-preview-satellite"></span>
-          <span class="basemap-label">Satellit</span>
+          <span class="basemap-label">Esri</span>
         </button>
       </div>
 
       <div class="terrain-row">
         <div><strong>Geländerelief</strong>
-          <p>3D-Überhöhung des Geländes</p>
+          <p>3D-Oberfläche + Hillshade (Mapterhorn)</p>
         </div>
-        <label class="switch"><input id="toggleTerrain" type="checkbox" /><span class="switch-slider"></span></label>
+        <label class="switch"><input id="toggle-relief" type="checkbox" /><span class="switch-slider"></span></label>
       </div>
 
       <div class="terrain-row">
-        <div><strong>Hillshade</strong>
-          <p>Schummerung der Landschaft</p>
+        <div><strong>3D-Gebäude</strong>
+          <p>Ab Zoom 14 sichtbar (OpenFreeMap)</p>
         </div>
-        <label class="switch"><input id="toggleHillshade" type="checkbox" /><span class="switch-slider"></span></label>
+        <label class="switch"><input id="toggle-buildings" type="checkbox" /><span class="switch-slider"></span></label>
       </div>
     </div>
   </section>

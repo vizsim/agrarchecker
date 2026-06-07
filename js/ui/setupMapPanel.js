@@ -1,9 +1,10 @@
 // setupMapPanel.js — Karten-Panel unten links (Stil aus vizsim/nettobreite):
-// Toggle-Button öffnet ein einklappbares Panel mit Basemap-Auswahl (Standard /
-// Satellit) und iOS-Style-Switches für Terrain (3D) und Hillshade.
-//
-// Ersetzt die alten #basemap-thumbnails / #terrain-controls und die inline an
-// #toggleTerrain / #toggleHillshade gehängten Handler.
+// Toggle-Button öffnet ein einklappbares Panel mit Basemap-Auswahl
+// (Positron / OSM Carto / Esri) und Switches für Geländerelief (3D-Terrain +
+// Hillshade) und 3D-Gebäude. Alles keyless (OpenFreeMap + Mapterhorn),
+// siehe js/map/basemapTerrain.js.
+
+import { setBasemap, setRelief, setBuildings } from "../map/basemapTerrain.js";
 
 export function setupMapPanel(map) {
   // Panel auf-/zuklappen
@@ -22,33 +23,24 @@ export function setupMapPanel(map) {
     });
   }
 
-  // Basemap-Umschalter (Standard = Positron-Vektor, Satellit = Esri-Raster)
+  // Basemap-Umschalter (positron / osm / satellite)
   document.querySelectorAll(".basemap-btn[data-basemap]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const isSatellite = btn.dataset.basemap === "satellite";
-      if (map.getLayer("satellite-layer")) {
-        map.setLayoutProperty("satellite-layer", "visibility", isSatellite ? "visible" : "none");
-      }
+      setBasemap(map, btn.dataset.basemap);
       document.querySelectorAll(".basemap-btn").forEach((b) => b.classList.remove("selected"));
       btn.classList.add("selected");
     });
   });
 
-  // Terrain (3D-Überhöhung)
-  const terrainToggle = document.getElementById("toggleTerrain");
-  if (terrainToggle) {
-    terrainToggle.addEventListener("change", (e) => {
-      map.setTerrain(e.target.checked ? { source: "terrain", exaggeration: 1.5 } : null);
-    });
+  // Geländerelief (3D-Terrain + Hillshade, Mapterhorn)
+  const reliefToggle = document.getElementById("toggle-relief");
+  if (reliefToggle) {
+    reliefToggle.addEventListener("change", (e) => setRelief(map, e.target.checked));
   }
 
-  // Hillshade-Layer
-  const hillshadeToggle = document.getElementById("toggleHillshade");
-  if (hillshadeToggle) {
-    hillshadeToggle.addEventListener("change", (e) => {
-      if (map.getLayer("hillshade-layer")) {
-        map.setLayoutProperty("hillshade-layer", "visibility", e.target.checked ? "visible" : "none");
-      }
-    });
+  // 3D-Gebäude (OpenFreeMap)
+  const buildingsToggle = document.getElementById("toggle-buildings");
+  if (buildingsToggle) {
+    buildingsToggle.addEventListener("change", (e) => setBuildings(map, e.target.checked));
   }
 }
