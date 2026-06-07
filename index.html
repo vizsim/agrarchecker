@@ -6,7 +6,7 @@
   <title>Agrarchecker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="tractor-svgrepo-com.svg" type="image/svg+xml">
-  <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css' />
+  <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css' />
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -107,11 +107,37 @@
       </div>
       <div class="legend-section-content">
         <div id="crop-analysis">
-          <div class="analysis-summary" id="analysis-summary"></div>
-          <div class="analysis-chart-wrap">
-            <canvas id="analysis-chart"></canvas>
+
+          <div class="analysis-tabs">
+            <button type="button" class="analysis-tab active" data-tab="ausschnitt">Ausschnitt</button>
+            <button type="button" class="analysis-tab" data-tab="zeitreihe">Zeitreihe</button>
           </div>
-          <div class="analysis-list" id="analysis-list"></div>
+
+          <!-- Tab: Ausschnitt (Donut) -->
+          <div class="analysis-pane" data-pane="ausschnitt">
+            <div class="analysis-summary" id="analysis-summary"></div>
+            <div class="analysis-chart-wrap">
+              <canvas id="analysis-chart"></canvas>
+            </div>
+            <div class="analysis-list" id="analysis-list"></div>
+          </div>
+
+          <!-- Tab: Zeitreihe (Stacked Bar über alle Jahre) -->
+          <div class="analysis-pane" data-pane="zeitreihe" hidden>
+            <div class="analysis-summary" id="ts-summary"></div>
+            <div class="analysis-chart-wrap analysis-chart-wrap-bar">
+              <canvas id="ts-chart"></canvas>
+            </div>
+            <div class="crop-filter-toolbar">
+              <span class="crop-filter-count"><strong id="ts-visible-count">–</strong> Kulturarten</span>
+              <div class="crop-filter-actions">
+                <button type="button" id="ts-select-all">Alle</button>
+                <button type="button" id="ts-select-none">Keine</button>
+              </div>
+            </div>
+            <div class="analysis-list ts-legend" id="ts-legend"></div>
+          </div>
+
           <div class="analysis-hint" id="analysis-hint"></div>
         </div>
       </div>

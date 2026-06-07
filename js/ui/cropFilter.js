@@ -6,6 +6,7 @@
 // setupAgrarVectorFiltering() aus main.js.
 
 import { CROP_GROUPS, CROPS } from "../cropTypes.js";
+import { highlightCrop } from "../map/cropHighlight.js";
 
 export function setupCropFilter(map, availableYears) {
   const container = document.getElementById("crop-filter");
@@ -15,6 +16,13 @@ export function setupCropFilter(map, availableYears) {
 
   const checkboxes = Array.from(container.querySelectorAll(".agrar-filter"));
   const counter = container.querySelector("#crop-filter-count");
+
+  // Hover über eine Kulturart hebt sie auf der Karte hervor (geteiltes Modul)
+  container.querySelectorAll(".crop-item").forEach((item) => {
+    const code = Number(item.dataset.code);
+    item.addEventListener("mouseenter", () => highlightCrop(map, code));
+    item.addEventListener("mouseleave", () => highlightCrop(map, null));
+  });
 
   const applyFilter = () => {
     const selected = checkboxes.filter((cb) => cb.checked).map((cb) => parseInt(cb.value, 10));
@@ -80,7 +88,7 @@ function renderMarkup() {
     const items = group.crops
       .map(
         (crop) => `
-        <label class="crop-item">
+        <label class="crop-item" data-code="${crop.code}">
           <input type="checkbox" class="agrar-filter" value="${crop.code}" checked />
           <span class="crop-swatch" style="background:${crop.color}"></span>
           <span class="crop-name">${crop.label}</span>

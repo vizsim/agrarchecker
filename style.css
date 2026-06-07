@@ -476,6 +476,74 @@ body {
   text-align: right;
 }
 
+/* ── Analyse-Tabs ── */
+.analysis-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 3px;
+  background: #f1f5f9;
+  border-radius: 9px;
+}
+
+.analysis-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.analysis-tab:hover {
+  color: var(--text);
+}
+
+.analysis-tab.active {
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.analysis-pane[hidden] {
+  display: none;
+}
+
+/* Stacked-Bar braucht eine feste Höhe (maintainAspectRatio: false) */
+.analysis-chart-wrap-bar {
+  max-width: none;
+  height: 200px;
+  margin-bottom: 12px;
+}
+
+/* Klickbare Zeitreihen-Legende */
+.ts-legend-item {
+  cursor: pointer;
+}
+
+.ts-legend-item .crop-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.ts-legend-item .analysis-row-val {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.ts-legend-item.is-off .crop-name {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.ts-legend-item.is-off .crop-swatch {
+  opacity: 0.35;
+}
+
 /* ============================================================
    Toggle Arrows (Sektionen / Root)
 ============================================================ */
