@@ -1,52 +1,36 @@
-
 // popupHandlers.js
 
-const cropTypeTranslation = {
-    "Permanent grassland": "Dauergrünland",
-    "Winter wheat": "Winterweizen",
-    "Winter barley": "Wintergerste",
-    "Winter rye": "Winterroggen",
-    "Spring barley": "Sommergerste",
-    "Spring oat": "Sommerhafer",
-    "Maize": "Mais",
-    "Potato": "Kartoffeln",
-    "Sugar beet": "Zuckerrübe",
-    "Winter rapeseed": "Winterraps",
-    "Sunflower": "Sonnenblumen",
-    "Cultivated grassland": "Ackerfutter",
-    "Vegetables": "Gartenbauerzeugnisse",
-    "Peas": "Erbse",
-    "Broad bean": "Ackerbohne",
-    "Lupin": "Lupine",
-    "Soy": "Soja",
-    "Small woody features": "Gehölz",
-    "Other agricultural areas": "Sonstige landwirtschaftliche Flächen",
-    "Fallow land": "Brachen",
-    "Other areas": "Sonstige Flächen",
-    "Small woody features on other land": "Gehölz auf sonstigen Flächen",
-    "Grapevine": "Rebflächen",
-    "Hops": "Hopfen",
-    "Orchard": "Plantagen"
-};
+import { cropTypeTranslation, CROPS } from "../cropTypes.js";
 
+// Schneller Lookup: ctm_majority → Farbe (für den Farbpunkt im Popup)
+const colorByCode = Object.fromEntries(CROPS.map((c) => [c.code, c.color]));
 
 export function setupAgrarVectorPopups(map) {
-    const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
+    const popup = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 12,
+        className: "agrar-popup",
+    });
 
     const renderAgrarTooltip = (props) => {
         const rawCrop = props.crop_type;
-        const translatedCrop = cropTypeTranslation[rawCrop] ?? rawCrop ?? "-";
+        const translatedCrop = cropTypeTranslation[rawCrop] ?? rawCrop ?? "–";
+        const color = colorByCode[props.ctm_majority] ?? "transparent";
+        const area = props.area_ha?.toFixed(2) ?? "–";
 
         return `
-    <div style="font-size: 12px;">
-        <strong>Feld-ID: ${props.id}</strong><br/>
-        <table style="border-collapse: collapse;">
-            <tr><td><strong>Kulturart</strong></td><td>${translatedCrop}</td></tr>
-            <tr><td><strong>CTM-Code</strong></td><td>${props.ctm_majority ?? "-"}</td></tr>
-            <tr><td><strong>Fläche</strong></td><td>${props.area_ha?.toFixed(2) ?? "-"} ha</td></tr>
-        </table>
-    </div>
-  `;
+        <div class="agrar-popup-card">
+          <div class="agrar-popup-head">
+            <span class="agrar-popup-swatch" style="background:${color}"></span>
+            <span class="agrar-popup-crop">${translatedCrop}</span>
+          </div>
+          <dl class="agrar-popup-grid">
+            <dt>Fläche</dt><dd>${area} ha</dd>
+            <dt>CTM-Code</dt><dd>${props.ctm_majority ?? "–"}</dd>
+            <dt>Feld-ID</dt><dd>${props.id ?? "–"}</dd>
+          </dl>
+        </div>`;
     };
 
     ["agrar_vector_2019", "agrar_vector_2020", "agrar_vector_2021", "agrar_vector_2022"].forEach((layerId) => {
@@ -62,5 +46,3 @@ export function setupAgrarVectorPopups(map) {
         });
     });
 }
-
-

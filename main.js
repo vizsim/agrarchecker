@@ -10,8 +10,9 @@ import { addSources } from "./js/mapdata/addSources.js";
 import { addLayers } from "./js/mapdata/addLayers.js";
 
 // // 📦 UI & Interaktion
-import { setupBaseLayerControls } from './js/ui/setupBaseLayerControls.js';
+import { setupMapPanel } from './js/ui/setupMapPanel.js';
 import { setupLayerToggles } from './js/ui/setupLayerToggles.js';
+import { setupCropFilter } from './js/ui/cropFilter.js';
 // import { setupScenarioControls } from './js/ui/setupScenarioControls.js';
 import { updateVisibleFeatureCount } from './js/ui/featureCounter.js';
 
@@ -80,15 +81,6 @@ export const LAYERS = {
   clusters: ["pie-clusters-fine-layer", "pie-clusters-coarse-layer"]
 };
 
-document.querySelector('[data-map="standard"]').style.backgroundImage =
-  "url('./thumbs/thumb-standard.png')";
-
-document.querySelector('[data-map="satellite"]').style.backgroundImage =
-  "url('./thumbs/thumb-satellite.png')";
-
-
-
-
 
 
 
@@ -150,9 +142,9 @@ async function initMap() {
 
     setupPopups(map);                          // 5. Popups initialisieren
 
-    // setupAgrarLayerSlider(map); 
+    // setupAgrarLayerSlider(map);
     setupAgrarLayerSlider(map, [2019, 2020, 2021, 2022]);
-    setupAgrarVectorFiltering(map, [2019, 2020, 2021, 2022]);
+    setupCropFilter(map, [2019, 2020, 2021, 2022]);
 
     //map.once("load", updateLegendVisibilityByZoom);
     //updateLegendVisibilityByZoom();
@@ -242,55 +234,6 @@ function setupAgrarLayerSlider(map) {
 
   });
 }
-
-
-function setupAgrarVectorFiltering(map, availableYears) {
-  const checkboxes = document.querySelectorAll(".agrar-filter");
-
-  const applyFilter = () => {
-    // Hole alle angehakten ctms
-    const selected = Array.from(checkboxes)
-      .filter(cb => cb.checked)
-      .map(cb => parseInt(cb.value));
-
-    const filter = selected.length > 0
-      ? ["in", "ctm_majority", ...selected] // ✅ korrekt
-      : ["==", "ctm_majority", -1];
-
-    // Filter auf alle geladenen Jahre anwenden
-    availableYears.forEach(year => {
-      const layerId = `agrar_vector_${year}`;
-      if (map.getLayer(layerId)) {
-        map.setFilter(layerId, filter);
-      }
-    });
-  };
-
-  // Eventlistener an alle Checkboxen
-  checkboxes.forEach(cb => cb.addEventListener("change", applyFilter));
-
-  applyFilter(); // initial aufrufen
-}
-
-
-
-
-
-// Toggle logic for Hillshade and Terrain
-document.getElementById('toggleHillshade').addEventListener('change', (e) => {
-  const visibility = e.target.checked ? 'visible' : 'none';
-  map.setLayoutProperty('hillshade-layer', 'visibility', visibility);
-});
-
-document.getElementById('toggleTerrain').addEventListener('change', (e) => {
-  if (e.target.checked) {
-    map.setTerrain({ source: 'terrain', exaggeration: 1.5 });
-  } else {
-    map.setTerrain(null);
-  }
-});
-
-
 
 
 function getSelectedCheckboxValues(group) {
@@ -394,8 +337,8 @@ function setupLegend(map) {
 
 
 function setupUI(map) {
-  setupBaseLayerControls(map, isInitializingRef);
-  // setupLayerToggles(map, applyZoomLock, applyLegendVisibility);
+  setupMapPanel(map);
+  setupLegendToggleHandlers(); // großer Pfeil: ganzes Panel ein-/ausklappen
   setupLayerToggles(
     map,
     originalMinZoom,
@@ -403,24 +346,16 @@ function setupUI(map) {
     applyLegendVisibility
   );
 
-  document.querySelectorAll('input[name="color-style"]').forEach(rb => {
-    rb.addEventListener("change", updateColorStyle);
-  });
-
-
-
-  document.querySelectorAll('.section-arrow').forEach(arrow => {
-    arrow.addEventListener('click', () => {
-      const section = document.querySelector(`.legend-section[data-section="${arrow.dataset.arrow}"]`);
+  // Ganze Sektions-Überschrift klickbar (nicht nur der Pfeil)
+  document.querySelectorAll('.legend-section-title.section-toggle').forEach(title => {
+    title.addEventListener('click', () => {
+      const section = document.querySelector(`.legend-section[data-section="${title.dataset.sectionId}"]`);
       if (!section) return;
-      const content = section.querySelector('.legend-section-content');
-      const isOpen = arrow.classList.contains('open');
-      arrow.classList.toggle('open', !isOpen);
-      section.classList.toggle('collapsed', isOpen);
+      const arrow = title.querySelector('.section-arrow');
+      const collapsed = section.classList.toggle('collapsed');
+      if (arrow) arrow.classList.toggle('open', !collapsed);
     });
   });
-
-
 }
 
 

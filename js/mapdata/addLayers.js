@@ -1,3 +1,4 @@
+import { getCropFillColorExpression } from "../cropTypes.js";
 
 export function addLayers(map) {
 
@@ -125,37 +126,8 @@ function addAgrarVectorLayer(map, year) {
       visibility: "none"
     },
     paint: {
-      "fill-color": [
-        "match",
-        ["get", "ctm_majority"],
-
-        200, "rgba(105, 194, 41, 1)",       // Dauergrünland
-        1101, "rgba(251, 251, 22, 1)",      // Winterweizen
-        1102, "rgba(228, 206, 63, 1)",      // Wintergerste
-        1103, "rgba(234, 127, 18, 1)",      // Winterroggen
-        1201, "rgba(194, 75, 45, 1)",       // Sommergerste
-        1202, "rgba(180, 23, 23, 1)",       // Sommerhafer
-        1300, "rgba(55, 237, 216, 1)",      // Mais
-        1401, "rgba(195, 125, 238, 1)",     // Kartoffeln
-        1402, "rgba(154, 12, 238, 1)",      // Zuckerrübe
-        1501, "rgba(238, 67, 156, 1)",      // Winterraps
-        1502, "rgba(227, 0, 247, 1)",       // Sonnenblumen
-        1602, "rgba(145, 255, 0, 1)",       // Ackerfutter
-        1603, "rgba(251, 33, 17, 1)",       // Gartenbauerzeugnisse
-        1611, "rgba(94, 176, 132, 1)",      // Erbse
-        1612, "rgba(91, 240, 158, 1)",      // Ackerbohne
-        1613, "rgba(157, 245, 163, 1)",     // Lupine
-        1614, "rgba(212, 237, 177, 1)",     // Soja
-        3001, "rgba(5, 131, 5, 1)",         // Gehölz
-        3002, "rgba(212, 212, 212, 1)",     // Sonstige landw. Flächen
-        3003, "rgba(178, 206, 68, 1)",      // Brachen
-        3004, "rgba(111, 111, 111, 1)",     // Sonstige Flächen
-        4001, "rgba(130, 128, 186, 1)",     // Rebflaechen
-        4002, "rgba(74, 20, 134, 1)",       // Hopfen
-        4003, "rgba(106, 81, 163, 1)",      // Plantagen
-
-        "rgba(0, 0, 0, 0)" // fallback = transparent
-      ],
+      // Einfärbung aus zentraler Kulturarten-Definition (js/cropTypes.js)
+      "fill-color": getCropFillColorExpression(),
       "fill-opacity": 0.5,
       "fill-outline-color": "#1B4D3E"
     }
