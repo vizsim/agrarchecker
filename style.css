@@ -96,15 +96,93 @@ body {
 }
 
 .source-credit {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   margin-left: 4px;
-  padding: 1px 7px;
+  padding: 1px 8px;
+  font: inherit;
   font-size: 10px;
   font-weight: 600;
   color: #3f6212;
   background: #ecfccb;
+  border: 1px solid transparent;
   border-radius: 999px;
   vertical-align: middle;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.source-credit::after {
+  content: "▾";
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+.source-credit:hover {
+  background: #d9f99d;
+  border-color: #bef264;
+}
+
+/* ── Quellen-Popover ── */
+.sources-popover {
+  position: fixed;
+  z-index: 20;
+  width: 280px;
+  max-width: calc(100vw - 24px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 12px 14px;
+  font-size: 12px;
+}
+
+.sources-popover[hidden] {
+  display: none;
+}
+
+.sources-popover h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.sources-popover .src-cite {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.sources-popover .src-group-title {
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+  margin: 10px 0 2px;
+}
+
+.sources-popover a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.sources-popover a:hover {
+  background: var(--accent-soft);
+}
+
+.sources-popover a .doi {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 400;
 }
 
 .info-icon {

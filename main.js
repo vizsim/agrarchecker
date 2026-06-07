@@ -15,6 +15,7 @@ import { setupMapPanel } from './js/ui/setupMapPanel.js';
 import { setupLayerToggles } from './js/ui/setupLayerToggles.js';
 import { setupCropFilter } from './js/ui/cropFilter.js';
 import { setupCropAnalysis } from './js/ui/cropAnalysis.js';
+import { setupSourcesInfo } from './js/ui/sourcesInfo.js';
 // import { setupScenarioControls } from './js/ui/setupScenarioControls.js';
 import { updateVisibleFeatureCount } from './js/ui/featureCounter.js';
 
@@ -341,6 +342,7 @@ function setupLegend(map) {
 
 function setupUI(map) {
   setupMapPanel(map);
+  setupSourcesInfo(); // Klick auf "Thünen-Institut" → Zenodo-Quellen
   setupLegendToggleHandlers(); // großer Pfeil: ganzes Panel ein-/ausklappen
   setupLayerToggles(
     map,

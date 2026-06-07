@@ -28,9 +28,10 @@ Vektor entsteht durch Verschneiden der Rasterkarte mit aus Satellitendaten
 abgeleiteten Feldgrenzen (Waldner et al. 2021) + Mehrheitsentscheid je Feld.
 Achtung: Vektor liegt aktuell als **v201** vor (nicht v202).
 
+- [x] **2017–2021** (v201, Sammelkarte) — `10.5281/zenodo.10619783` → zenodo.org/records/10619783  *(deckt 2019–2021 ab; im Frontend verlinkt)*
 - [ ] **2022** (v201) — `10.5281/zenodo.10621629` → zenodo.org/records/10621629
 - [ ] **2023** (v201) — `10.5281/zenodo.17135735` → zenodo.org/records/17135735  *(GeoPackage, ~9 GB)*
-- [ ] Prüfen: gibt es eine Vektor-Sammelkarte 2017–2021 bzw. Vektor 2024?
+- [ ] Prüfen: gibt es Vektor 2024?
 
 ## 3. Optionale Zusatzdaten
 
@@ -78,5 +79,5 @@ Für **2024** gibt es zusätzlich eine **neue Produktlinie v3xx**
 ## 6. Offene Fragen / zu verifizieren
 
 - [ ] Exakte Versionsnummer des 2023-Records `15055561`
-- [ ] Existenz/DOI einer Vektor-Sammelkarte 2017–2021 und Vektor 2024
+- [x] Vektor-Sammelkarte 2017–2021 = `10.5281/zenodo.10619783` (v201) · noch offen: Vektor 2024
 - [ ] Endgültige Entscheidung v202 vs. v3xx-Linie ab 2024
