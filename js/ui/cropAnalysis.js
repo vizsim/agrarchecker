@@ -19,7 +19,7 @@
 // mehrere Vektorkacheln gehen, werden nach Feld-id dedupliziert.
 
 import { CROPS } from "../cropTypes.js";
-import { highlightCrop, isCropHighlightBusy } from "../map/cropHighlight.js";
+import { highlightCrop } from "../map/cropHighlight.js";
 
 const labelByCode = Object.fromEntries(CROPS.map((c) => [c.code, c.label]));
 const colorByCode = Object.fromEntries(CROPS.map((c) => [c.code, c.color]));
@@ -49,11 +49,28 @@ export function setupCropAnalysis(map, years) {
   let tsChart = null;
   let activeTab = "ausschnitt";
   let probing = false;
+  let lastKey = null; // Signatur des zuletzt gebauten Zustands (siehe viewKey)
   const hiddenCrops = new Set(); // Codes, die in der Zeitreihe ausgeblendet sind
 
   const sliderEl = () => document.getElementById("agrar-layer-slider");
   const activeYear = () => sliderEl()?.value ?? String(years[0]);
   const sectionOpen = () => !section.classList.contains("collapsed");
+
+  // Signatur dessen, was den Plot beeinflusst. Hover ändert NICHTS davon →
+  // ein vom Highlight ausgelöster Repaint baut den Plot nicht neu.
+  const filterSig = () =>
+    Array.from(document.querySelectorAll(".agrar-filter")).filter((cb) => cb.checked).map((cb) => cb.value).join(",");
+  const viewKey = () => {
+    const c = map.getCenter();
+    return [
+      activeTab,
+      activeYear(),
+      map.getZoom().toFixed(2),
+      c.lng.toFixed(4),
+      c.lat.toFixed(4),
+      activeTab === "ausschnitt" ? filterSig() : "", // Zeitreihe ignoriert den Filter
+    ].join("|");
+  };
 
   // ── Probe-Lifecycle: alle Jahre für den Ausschnitt abfragbar machen ──
   const probe = () => {
@@ -65,6 +82,7 @@ export function setupCropAnalysis(map, years) {
       map.setPaintProperty(id, "fill-opacity", String(year) === String(y) ? BASE_OPACITY : 0);
     }
     probing = true;
+    lastKey = null; // nach dem Tile-Load (gleicher viewKey) trotzdem neu bauen
   };
 
   const restore = () => {
@@ -339,12 +357,14 @@ export function setupCropAnalysis(map, years) {
   const slider = sliderEl();
   if (slider) slider.addEventListener("input", () => { if (probing) probe(); });
 
-  // ── Karte settled → aktiven Tab aktualisieren ──
-  let timer;
+  // ── Karte settled → nur neu bauen, wenn sich der viewKey geändert hat ──
+  // (Hover ändert den viewKey nicht → kein Neuaufbau; pan/zoom/jahr/tab/filter schon.)
   map.on("idle", () => {
-    if (isCropHighlightBusy()) return; // Repaint kam vom Hover-Highlight → kein Neuaufbau
-    clearTimeout(timer);
-    timer = setTimeout(updateActive, 150);
+    if (!sectionOpen()) return;
+    const key = viewKey();
+    if (key === lastKey) return;
+    lastKey = key;
+    updateActive();
   });
 }
 
