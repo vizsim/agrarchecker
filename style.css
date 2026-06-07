@@ -405,6 +405,74 @@ body {
 }
 
 /* ============================================================
+   Analyse (sichtbarer Ausschnitt)
+============================================================ */
+.analysis-summary {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.analysis-summary strong {
+  color: var(--text);
+}
+
+.analysis-chart-wrap {
+  max-width: 200px;
+  margin: 0 auto 12px;
+}
+
+.analysis-hint {
+  display: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px 8px;
+  background: #f8fafc;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.analysis-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-row {
+  display: grid;
+  grid-template-columns: 16px 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 4px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.analysis-row:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.analysis-row-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.analysis-row-val {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.analysis-row-pct {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ============================================================
    Toggle Arrows (Sektionen / Root)
 ============================================================ */
 .toggle-arrow {

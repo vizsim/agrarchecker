@@ -13,6 +13,7 @@ import { addLayers } from "./js/mapdata/addLayers.js";
 import { setupMapPanel } from './js/ui/setupMapPanel.js';
 import { setupLayerToggles } from './js/ui/setupLayerToggles.js';
 import { setupCropFilter } from './js/ui/cropFilter.js';
+import { setupCropAnalysis } from './js/ui/cropAnalysis.js';
 // import { setupScenarioControls } from './js/ui/setupScenarioControls.js';
 import { updateVisibleFeatureCount } from './js/ui/featureCounter.js';
 
@@ -145,6 +146,7 @@ async function initMap() {
     // setupAgrarLayerSlider(map);
     setupAgrarLayerSlider(map, [2019, 2020, 2021, 2022]);
     setupCropFilter(map, [2019, 2020, 2021, 2022]);
+    setupCropAnalysis(map, [2019, 2020, 2021, 2022]);
 
     //map.once("load", updateLegendVisibilityByZoom);
     //updateLegendVisibilityByZoom();

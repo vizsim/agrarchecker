@@ -99,6 +99,26 @@
 
     <div class="legend-section-divider"></div>
 
+    <!-- ===== Sektion: Analyse (sichtbarer Ausschnitt) ===== -->
+    <div class="legend-section collapsed" data-section="analyse">
+      <div class="legend-section-title section-toggle" data-section-id="analyse">
+        <span>Analyse</span>
+        <span class="toggle-arrow section-arrow" data-arrow="analyse"></span>
+      </div>
+      <div class="legend-section-content">
+        <div id="crop-analysis">
+          <div class="analysis-summary" id="analysis-summary"></div>
+          <div class="analysis-chart-wrap">
+            <canvas id="analysis-chart"></canvas>
+          </div>
+          <div class="analysis-list" id="analysis-list"></div>
+          <div class="analysis-hint" id="analysis-hint"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-section-divider"></div>
+
     <!-- ===== Fußzeile ===== -->
     <div id="feature-count-wrapper">
       <div id="feature-count">
@@ -156,6 +176,7 @@
     </div>
   </section>
 
+  <script src="https://unpkg.com/chart.js@4.5.0/dist/chart.umd.min.js"></script>
   <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/pmtiles@4.3.0/dist/pmtiles.js"></script>
   <script type="module" src="./main.js"></script>
